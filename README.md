@@ -20,10 +20,11 @@ package com.example.auction.item.impl
 import java.io.File
 
 import com.example.auction.item.api.ItemService
-import com.github.erip.pact.lagom.LagomPactSpecification
+import com.github.erip.pact.lagom.{CassandraPersistence, LagomPactSpecification}
 import com.lightbend.lagom.scaladsl.server.{LagomApplicationContext, LocalServiceLocator}
 
-class ItemServicePactSpec extends LagomPactSpecification[ItemApplication, ItemService] {
+class ItemServicePactSpec
+  extends LagomPactSpecification[ItemApplication, ItemService] with CassandraPersistence {
 
   override def pactFile: File = new File(getClass.getResource("/pacts/pact.json").toURI)
 
