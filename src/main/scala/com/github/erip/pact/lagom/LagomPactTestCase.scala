@@ -3,6 +3,7 @@ package com.github.erip.pact.lagom
 import com.lightbend.lagom.scaladsl.api.Service
 import com.lightbend.lagom.scaladsl.server.{LagomApplication, LagomApplicationContext}
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
+import com.lightbend.lagom.scaladsl.testkit.ServiceTest.Setup
 import org.scalatest.{Assertion, AsyncWordSpec, Matchers}
 import org.scalatest.Inspectors._
 import play.api.libs.ws.WSClient
@@ -15,6 +16,7 @@ private[lagom] trait LagomPactTestCase[T <: LagomApplication, S <: Service]
 
   protected def provider: String
   protected def interaction: Interaction
+  protected def setupWithPersistence: Setup
 
   private def description: String = interaction.description
 
@@ -53,7 +55,7 @@ private[lagom] trait LagomPactTestCase[T <: LagomApplication, S <: Service]
   def applicationLoader: LagomApplicationContext => T
 
   def withService(block: (WSClient, String, Int) => Future[Assertion]): Future[Assertion] = {
-    ServiceTest.withServer(ServiceTest.defaultSetup.withCassandra())(applicationLoader) { server =>
+    ServiceTest.withServer(setupWithPersistence)(applicationLoader) { server =>
       WsTestClient.withClient { wsClient =>
         block(wsClient, "http://127.0.0.1", server.playServer.httpPort.getOrElse(fail("No HTTP port specified")))
       }

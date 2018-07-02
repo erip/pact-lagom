@@ -4,13 +4,14 @@ import java.io.File
 
 import com.lightbend.lagom.scaladsl.api.Service
 import com.lightbend.lagom.scaladsl.server.{LagomApplication, LagomApplicationContext}
+import com.lightbend.lagom.scaladsl.testkit.ServiceTest.Setup
 import org.scalatest.{FlatSpec, Matchers}
 import play.api.libs.json.{JsValue, Json}
 
 import scala.io.Source
 
 trait LagomPactSpecification[T <: LagomApplication, S <: Service]
-  extends FlatSpec with Matchers {
+  extends FlatSpec with Matchers { self: Persistence =>
 
   def pactFile: File
 
@@ -30,6 +31,8 @@ trait LagomPactSpecification[T <: LagomApplication, S <: Service]
         override def interaction: Interaction = inter
 
         override def applicationLoader: LagomApplicationContext => T = appLoader
+
+        override def setupWithPersistence: Setup = self.setupWithPersistence
       }.execute()
     }
   }
