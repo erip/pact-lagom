@@ -11,15 +11,45 @@ import play.api.test.WsTestClient
 
 import scala.concurrent.Future
 
+/**
+  * A testcase for a single interaction.
+  *
+  * @tparam T the type of [[com.lightbend.lagom.scaladsl.server.LagomApplication]] which will be loaded.
+  * @tparam S the type of [[com.lightbend.lagom.scaladsl.api.Service]] under test.
+  */
 private[lagom] trait LagomPactTestCase[T <: LagomApplication, S <: Service]
   extends AsyncWordSpec with Matchers {
 
+  /**
+    * The ame of the provider under test.
+    */
   protected def provider: String
+
+  /**
+    * The interaction being tested.
+    */
   protected def interaction: Interaction
+
+  /**
+    * The service-specific setup with persistence.
+    */
   protected def setupWithPersistence: Setup
 
+  /**
+    * The description of the interaction, which will be used as the test name.
+    */
   private def description: String = interaction.description
 
+  /**
+    * The invocation of an interaction against a running test service and associated assertions against
+    * the response thereof.
+    *
+    * @param ws the ws client used to submit HTTP requests.
+    * @param host the host of the test service
+    * @param port the port of the test service
+    * @param interaction the interaction to be tested.
+    * @return a future of assertions describing the success or failure of the test.
+    */
   private def invoke(ws: WSClient, host: String, port: Int, interaction: Interaction): Future[Assertion] = {
 
     val baseRequest =
@@ -40,6 +70,13 @@ private[lagom] trait LagomPactTestCase[T <: LagomApplication, S <: Service]
     }
   }
 
+  /**
+    * Checks whether all expected headers exist in the response headers, but
+    * not vice versa. If there are no expected headers, the check succeeds indiscriminately.
+    * @param responseHeaders the headers returned from the HTTP request
+    * @param expectedHeaders the optional headers to check.
+    * @return a future containing the success or failure of the assertions made against headers.
+    */
   private def checkHeaders(
     responseHeaders: Map[String, Seq[String]],
     expectedHeaders: Option[Map[String, String]]
@@ -52,8 +89,17 @@ private[lagom] trait LagomPactTestCase[T <: LagomApplication, S <: Service]
     case None => succeed
   }
 
+  /**
+    * The anonymous function which will create an application when given an application context.
+    */
   def applicationLoader: LagomApplicationContext => T
 
+  /**
+    * A fixture which will provide a test instance of the provider and a web service client.
+    * It will run arbitrary tests or fail of an HTTP port is not provided by Play.
+    *
+    * @param block the tests to be run when given a client and the ingredients of a service.
+    */
   def withService(block: (WSClient, String, Int) => Future[Assertion]): Future[Assertion] = {
     ServiceTest.withServer(setupWithPersistence)(applicationLoader) { server =>
       WsTestClient.withClient { wsClient =>
