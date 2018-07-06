@@ -1,6 +1,6 @@
-package com.github.erip.pact.lagom
+package com.github.erip.pact.lagom.verify
 
-import play.api.libs.json.{Format, JsObject, JsValue, Json}
+import play.api.libs.json.{Format, JsValue, Json}
 
 import scala.collection.immutable._
 

@@ -1,11 +1,11 @@
-package com.github.erip.pact.lagom
+package com.github.erip.pact.lagom.verify
 
 import com.lightbend.lagom.scaladsl.api.Service
 import com.lightbend.lagom.scaladsl.server.{LagomApplication, LagomApplicationContext}
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest.Setup
-import org.scalatest.{Assertion, AsyncWordSpec, Matchers}
 import org.scalatest.Inspectors._
+import org.scalatest.{Assertion, AsyncWordSpec, Matchers}
 import play.api.libs.ws.WSClient
 import play.api.test.WsTestClient
 

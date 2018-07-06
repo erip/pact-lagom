@@ -10,7 +10,7 @@ Since this is a prototype, it will need to be published locally:
 sbt publishLocal
 ```
 
-## Example
+## Verification Example
 
 Derived from the [online-scala-auction](https://github.com/lagom/online-auction-scala) repository, this test should be dropped in `online-auction-scala/item-impl/src/test/scala/com/example/auction/item/impl/ItemServicePactSpec.scala`:
 
@@ -20,7 +20,7 @@ package com.example.auction.item.impl
 import java.io.File
 
 import com.example.auction.item.api.ItemService
-import com.github.erip.pact.lagom.{CassandraPersistence, LagomPactSpecification}
+import com.github.erip.pact.lagom.verify.{CassandraPersistence, LagomPactSpecification}
 import com.lightbend.lagom.scaladsl.server.{LagomApplicationContext, LocalServiceLocator}
 
 class ItemServicePactSpec

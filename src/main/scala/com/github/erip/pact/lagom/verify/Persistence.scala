@@ -1,4 +1,4 @@
-package com.github.erip.pact.lagom
+package com.github.erip.pact.lagom.verify
 
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest.Setup

@@ -1,4 +1,4 @@
-package com.github.erip.pact.lagom
+package com.github.erip.pact.lagom.verify
 
 import java.io.File
 
